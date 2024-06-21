@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Documents P5 2/Git Repository/sport3.2/sports.db" readonly="0" foreign_keys="" case_sensitive_like="" temp_store="" wal_autocheckpoint="" synchronous=""/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1286"/><column_width id="4" width="0"/></tab_structure><tab_browse><current_table name="0,0:"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">-- Drop existing tables to reset the schema
+DROP TABLE IF EXISTS PLAYER_GAME;
+DROP TABLE IF EXISTS PLAYER;
+DROP TABLE IF EXISTS GAME;
+DROP TABLE IF EXISTS COACH;
+
+-- Create COACH table
+CREATE TABLE COACH (
+    coach_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    address TEXT,
+    yrs_experience INTEGER
+);
+
+-- Create PLAYER table
+CREATE TABLE PLAYER (
+    player_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT,
+    last_name TEXT,
+    score INTEGER,
+    team TEXT
+);
+
+-- Create GAME table
+CREATE TABLE GAME (
+    game_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    home TEXT,
+    away TEXT,
+    date TEXT,
+    time TEXT,
+    location TEXT
+);
+
+-- Create PLAYER_GAME table for many-to-many relationship
+CREATE TABLE PLAYER_GAME (
+    player_id INTEGER,
+    game_id INTEGER,
+    PRIMARY KEY (player_id, game_id),
+    FOREIGN KEY (player_id) REFERENCES PLAYER(player_id),
+    FOREIGN KEY (game_id) REFERENCES GAME(game_id)
+);
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
