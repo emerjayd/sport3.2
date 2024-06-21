@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS PLAYER (
     player_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    number INTEGER,
     first_name TEXT,
     last_name TEXT,
     score INTEGER,
