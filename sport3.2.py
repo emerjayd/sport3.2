@@ -38,6 +38,47 @@ def read_db(cursor):
 
     print(table)
 
+def read_game_db(cursor):
+    cursor.execute('SELECT * FROM GAME')
+    games = cursor.fetchall()
+
+    table = PrettyTable()
+    table.field_names = ["Game ID", "Home", "Away", "Date", "Time", "Location"]
+
+    for game in games:
+        table.add_row(game)
+
+    print(table)
+
+def read_player_game_db(cursor):
+    cursor.execute('SELECT * FROM PLAYER_GAME')
+    player_games = cursor.fetchall()
+
+    table = PrettyTable()
+    table.field_names = ["Player ID", "Game ID"]
+
+    for player_game in player_games:
+        table.add_row(player_game)
+
+    print(table)
+
+def read_linked_players_games(cursor):
+    cursor.execute('''
+    SELECT PLAYER.player_id, PLAYER.first_name, PLAYER.last_name, GAME.game_id, GAME.home, GAME.away, GAME.date
+    FROM PLAYER
+    JOIN PLAYER_GAME ON PLAYER.player_id = PLAYER_GAME.player_id
+    JOIN GAME ON PLAYER_GAME.game_id = GAME.game_id
+    ''')
+    links = cursor.fetchall()
+
+    table = PrettyTable()
+    table.field_names = ["Player ID", "First Name", "Last Name", "Game ID", "Home", "Away", "Date"]
+
+    for link in links:
+        table.add_row(link)
+
+    print(table)
+
 def delete_data(cursor):
     cursor.execute('DELETE FROM PLAYER_GAME')
     cursor.execute('DELETE FROM PLAYER')
@@ -93,31 +134,37 @@ def view_player_games(cursor):
         print(f"An error occurred: {e}")
 
 def main():
-    conn = sqlite3.connect('sport3.2.db')
+    conn = sqlite3.connect('sports.db')
     cursor = conn.cursor()
 
     while True:
-        print("Options - 1: Read db, 2: Delete data, 3: Populate PLAYER table, 4: Populate GAME table, 5: Link player to game, 6: View player games, 99: CUSTOM SQL, 0: Exit")
+        print("Options - 1: Read PLAYER table, 2: Read GAME table, 3: Read PLAYER_GAME table, 4: Delete data, 5: Populate PLAYER table, 6: Populate GAME table, 7: Link player to game, 8: View player games, 9: View linked players and games, 99: CUSTOM SQL, 0: Exit")
         choice = input("Make a choice: ")
 
         if choice == '1':
             read_db(cursor)
         elif choice == '2':
+            read_game_db(cursor)
+        elif choice == '3':
+            read_player_game_db(cursor)
+        elif choice == '4':
             delete_data(cursor)
             conn.commit()
-        elif choice == '3':
-            csv_file_path = 'players.csv'
+        elif choice == '5':
+            csv_file_path = 'C:\\Documents P5 2\\Academy\\Databases\\sport3.1\\players.csv'  # Update with the correct path
             insert_data_from_csv(cursor, csv_file_path)
             conn.commit()
             print("PLAYER table populated with data from CSV.")
-        elif choice == '4':
+        elif choice == '6':
             populate_game_table(cursor)
             conn.commit()
-        elif choice == '5':
+        elif choice == '7':
             link_player_to_game(cursor)
             conn.commit()
-        elif choice == '6':
+        elif choice == '8':
             view_player_games(cursor)
+        elif choice == '9':
+            read_linked_players_games(cursor)
         elif choice == '99':
             custom_sql(cursor, conn)
         elif choice == '0':
