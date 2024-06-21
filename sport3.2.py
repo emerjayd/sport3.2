@@ -1,6 +1,6 @@
 import sqlite3
 import pandas as pd
-
+from prettytable import PrettyTable
 def insert_data_from_csv(cursor, csv_file_path):
     # Read the CSV file and specify column names
     column_names = ['FirstName', 'LastName', 'Score', 'Team']
@@ -12,12 +12,25 @@ def insert_data_from_csv(cursor, csv_file_path):
         INSERT INTO PLAYER (number, first_name, last_name, score, team)
         VALUES (?, ?, ?, ?, ?)
         ''', (None, row['FirstName'], row['LastName'], row['Score'], row['Team']))
-
+        
 def read_db(cursor):
     cursor.execute('SELECT * FROM PLAYER')
     players = cursor.fetchall()
+
+    # Create a PrettyTable object
+    table = PrettyTable()
+    table.field_names = ["Player ID", "First Name", "Last Name", "Score", "Team"]
+
     for player in players:
-        print(player)
+        table.add_row(player)
+    
+    print(table)
+    
+# def read_db(cursor):
+#     cursor.execute('SELECT * FROM PLAYER')
+#     players = cursor.fetchall()
+#     for player in players:
+#         print(player)
 
 def delete_data(cursor):
     cursor.execute('DELETE FROM PLAYER')
